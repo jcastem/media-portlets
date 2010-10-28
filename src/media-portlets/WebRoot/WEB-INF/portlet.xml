@@ -2,4 +2,44 @@
 <portlet-app xmlns='http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd' 
      xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' 
      xsi:schemaLocation='http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd' version='1.0'>
+<portlet>
+	<portlet-name>YouTubePlayerPortlet</portlet-name>
+	<display-name>YouTubePlayerPortlet Portlet</display-name>
+	<portlet-class>
+		com.devportal.portlet.media.controller.YouTubePlayerPortlet
+	</portlet-class>
+	<supports>
+		<mime-type>text/html</mime-type>
+		<portlet-mode>VIEW</portlet-mode>
+		<portlet-mode>EDIT</portlet-mode>
+		<portlet-mode>HELP</portlet-mode>
+	</supports>
+	<portlet-info>
+		<title>YouTubePlayerPortlet Portlet</title>
+	</portlet-info>
+	<supported-public-render-parameter>video</supported-public-render-parameter>
+</portlet>
+<portlet>
+	<portlet-name>YouTubePlayListPortlet</portlet-name>
+	<display-name>YouTubePlayListPortlet Portlet</display-name>
+	<portlet-class>
+		com.devportal.portlet.media.controller.YouTubePlayListPortlet
+	</portlet-class>
+	<supports>
+		<mime-type>text/html</mime-type>
+		<portlet-mode>VIEW</portlet-mode>
+		<portlet-mode>EDIT</portlet-mode>
+		<portlet-mode>HELP</portlet-mode>
+	</supports>
+	<portlet-info>
+		<title>YouTubePlayListPortlet Portlet</title>
+	</portlet-info>
+	<supported-public-render-parameter>video</supported-public-render-parameter>
+</portlet>
+<public-render-parameter>
+	<identifier>video</identifier>
+	<qname xmlns:n="http://www.mynamespace.com/">
+	n:video
+	</qname>
+</public-render-parameter>
 </portlet-app>

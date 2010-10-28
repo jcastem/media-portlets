@@ -2,3 +2,8 @@ Autor: Juan Carlos Castellanos Moreno
 Email: jcastem@dev-portal.com
 Licencia: Libre (por definir)
 Proyecto que contiene portlets para embeber contenidos medios externos. Youtube, flicker, slideshare, etc
+
+Estructura:
+
+src/ : Contiene el codigo fuente
+src/media-portlets: Web Project MyEclipse V.8.5 - Con soporte para portlets (JSR 286) 

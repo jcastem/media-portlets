@@ -7,6 +7,13 @@
 <portlet:defineObjects />
 <%--<%PortletPreferences prefs = renderRequest.getPreferences();%>--%> 
 
-<p style="color:blue">
-    YouTubePlayerPortlet is in <b>edit mode</b>
-</p>
+<form action="${requestScope.saveActionURL}" method="POST">
+	Tipo de reproducci&oacute;n:
+	<select name="tipo_reproduccion">
+		<option value="dinamica">Din&aacute;mica</option>
+		<option value="estatica">Est&aacute;tica</option>
+	</select>
+	ID del video de youtube:
+	<input type="text" name="video_id" />
+	<input type="submit" />
+</form>

@@ -52,10 +52,11 @@ public class YouTubePlayerPortlet extends GenericPortlet {
 		if(tipoReproduccion.equals("")) {
 			tipoReproduccion = YouTubePlayerPortlet.TIPO_REPRODUCCION_DINAMICA;
 		}
-		request.setAttribute("tipo_reproduccion", tipoReproduccion);
+		
 		response.setContentType("text/html");
 		PortletRequestDispatcher dispatcher = getPortletContext().getRequestDispatcher("/WEB-INF/jsp/YouTubePlayerPortlet_edit.jsp");
 		
+		request.setAttribute("tipoReproduccion", tipoReproduccion);
 		PortletURL saveActionUrl = response.createActionURL();
 		saveActionUrl.setParameter(ActionRequest.ACTION_NAME, "saveAction");
 		request.setAttribute("saveActionURL", saveActionUrl);

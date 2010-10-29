@@ -99,7 +99,7 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 			}
 			
 			
-			// Asignacion de la pagina actual de corrimiento (start -> offset) para el servicio web
+			// Asignacion de la pagina actual y del corrimiento (start -> offset) para el servicio web
 			if(request.getParameter("page") != null && !request.getParameter("page").trim().isEmpty()) {
 				try {
 					Integer page = Integer.parseInt(request.getParameter("page"));
@@ -176,14 +176,7 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 			} catch (ServiceException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-	
-			/*
-			PortletURL renderURL = response.createRenderURL();
-			renderURL.setParameter("video", "6K-HlwfhXeI");
-			request.setAttribute("videoURL", renderURL);
-			*/		
-			
+			}		
 		}
 		
 		response.setContentType("text/html");

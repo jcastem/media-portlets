@@ -31,9 +31,13 @@
 	ID del video de youtube:
 	<input type="text" name="video_id" value="${requestScope.videoId}"/>
 	</div>
-	Mostrar t&iacute;tulo: <input type="checkbox" name="show_title"  ${requestScope.showTitle == "true"? 'checked="checked"': ''}  /> 
-	Mostrar descripci&oacute;n: <input type="checkbox" name="show_description"  ${requestScope.showDescription == "true"? 'checked="checked"': ''}  />
-	Mostrar reproducciones: <input type="checkbox" name="show_view_count"  ${requestScope.showViewCount == "true"? 'checked="checked"': ''}  /> 
-	 
-	<input type="submit" />
+	<fieldset>
+		<legend>Opciones de visualizaci&oacute;n</legend>
+		Ancho:	<input type="text" name="width" value="${requestScope.width}"/>
+		Alto: <input type="text" name="height" value="${requestScope.height}">
+		Mostrar t&iacute;tulo: <input type="checkbox" name="show_title"  ${requestScope.showTitle == "true"? 'checked="checked"': ''}  /> 
+		Mostrar descripci&oacute;n: <input type="checkbox" name="show_description"  ${requestScope.showDescription == "true"? 'checked="checked"': ''}  />
+		Mostrar reproducciones: <input type="checkbox" name="show_view_count"  ${requestScope.showViewCount == "true"? 'checked="checked"': ''}  /> 
+	</fieldset>
+	<input type="submit" value="Guardar"/>
 </form>

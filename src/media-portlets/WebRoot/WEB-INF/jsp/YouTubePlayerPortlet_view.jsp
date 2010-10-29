@@ -12,12 +12,12 @@
 		<h1>${requestScope.feed["title"]}</h1>
 	</div>
 </c:if>
-<div class="youtube_player_player">
-	<object width="620" height="375">
+<div width="${requestScope.width}" height="${requestScope.height}" class="youtube_player_player">
+	<object width="${requestScope.width}" height="${requestScope.height}">
 		<param name="movie" value='http://www.youtube.com/v/${requestScope.feed["v"]}&amp;hl=es_ES&amp;fs=1&amp;autoplay=1'></param>
 		<param name="allowFullScreen" value="true"></param>
 		<param name="allowscriptaccess" value="always"></param>
-		<embed src='http://www.youtube.com/v/${requestScope.feed["v"]}&amp;hl=es_ES&amp;fs=1&amp;autoplay=1' type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="620" height="375"></embed>
+		<embed src='http://www.youtube.com/v/${requestScope.feed["v"]}&amp;hl=es_ES&amp;fs=1&amp;autoplay=1' type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="${requestScope.width}" height="${requestScope.height}"></embed>
 	</object>
 </div>
 <c:if test='${requestScope.showDescription == "true"}'>
@@ -27,6 +27,6 @@
 </c:if>
 <c:if test='${requestScope.showViewCount == "true"}'>
 <div class="youtube_player_view_count"> 
-	${requestScope.feed["viewCount"]}
+	Reproducciones: ${requestScope.feed["viewCount"]}
 </div>
 </c:if>

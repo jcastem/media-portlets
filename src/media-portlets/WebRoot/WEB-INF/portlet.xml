@@ -14,10 +14,12 @@
 		<portlet-mode>EDIT</portlet-mode>
 		<portlet-mode>HELP</portlet-mode>
 	</supports>
+	<resource-bundle>content.Language</resource-bundle>
 	<portlet-info>
-		<title>YouTubePlayerPortlet Portlet</title>
+		<title>YouTube Player</title>
 	</portlet-info>
 	<supported-public-render-parameter>video</supported-public-render-parameter>
+	
 </portlet>
 <portlet>
 	<portlet-name>YouTubePlayListPortlet</portlet-name>
@@ -31,8 +33,9 @@
 		<portlet-mode>EDIT</portlet-mode>
 		<portlet-mode>HELP</portlet-mode>
 	</supports>
+	<resource-bundle>content.Language</resource-bundle>
 	<portlet-info>
-		<title>YouTubePlayListPortlet Portlet</title>
+		<title>YouTube Playlist</title>
 	</portlet-info>
 	<supported-public-render-parameter>video</supported-public-render-parameter>
 </portlet>

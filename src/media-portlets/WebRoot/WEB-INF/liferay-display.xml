@@ -1,0 +1,8 @@
+<display>
+	<category name="category.cms">
+		<category name="media-portlets.category">
+			<portlet id="YouTubePlayerPortlet" />
+			<portlet id="YouTubePlayListPortlet" />
+		</category>
+	</category>
+</display>

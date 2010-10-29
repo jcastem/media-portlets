@@ -7,16 +7,26 @@
 
 <portlet:defineObjects />
 <%--<%PortletPreferences prefs = renderRequest.getPreferences();%>--%> 
-<h1>${requestScope.feed["title"]}</h1>
-<object width="620" height="375">
-	<param name="movie" value='http://www.youtube.com/v/${requestScope.feed["v"]}&amp;hl=es_ES&amp;fs=1&amp;autoplay=1'></param>
-	<param name="allowFullScreen" value="true"></param>
-	<param name="allowscriptaccess" value="always"></param>
-	<embed src='http://www.youtube.com/v/${requestScope.feed["v"]}&amp;hl=es_ES&amp;fs=1&amp;autoplay=1' type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="620" height="375"></embed>
-</object>
-<c:if test='${requestScope.showDescription == "true"}'>
-	<div class="youtube_player_description">
-		<p>${requestScope.feed["description"]}</p>
+<c:if test='${requestScope.showTitle == "true"}'>
+	<div class="youtube_player_title">
+		<h1>${requestScope.feed["title"]}</h1>
 	</div>
 </c:if>
-<div>${requestScope.feed["viewCount"]}</div>
+<div class="youtube_player_player">
+	<object width="620" height="375">
+		<param name="movie" value='http://www.youtube.com/v/${requestScope.feed["v"]}&amp;hl=es_ES&amp;fs=1&amp;autoplay=1'></param>
+		<param name="allowFullScreen" value="true"></param>
+		<param name="allowscriptaccess" value="always"></param>
+		<embed src='http://www.youtube.com/v/${requestScope.feed["v"]}&amp;hl=es_ES&amp;fs=1&amp;autoplay=1' type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="620" height="375"></embed>
+	</object>
+</div>
+<c:if test='${requestScope.showDescription == "true"}'>
+	<div class="youtube_player_description">
+		${requestScope.feed["description"]}
+	</div>
+</c:if>
+<c:if test='${requestScope.showViewCount == "true"}'>
+<div class="youtube_player_view_count"> 
+	${requestScope.feed["viewCount"]}
+</div>
+</c:if>

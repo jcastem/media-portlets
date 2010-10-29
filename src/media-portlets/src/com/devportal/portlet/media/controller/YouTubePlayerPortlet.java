@@ -47,17 +47,20 @@ public class YouTubePlayerPortlet extends GenericPortlet {
 			throws PortletException, IOException {
 		// Cargamos la configuracion del portlet
 		PortletPreferences prefs = request.getPreferences();
-		String tipoReproduccion = prefs.getValue("tipoReproduccion", "");
+		String tipoReproduccion = prefs.getValue("tipoReproduccion", tipoReproduccion = YouTubePlayerPortlet.TIPO_REPRODUCCION_DINAMICA);
 		String videoId = prefs.getValue("videoId", "");
-		if(tipoReproduccion.equals("")) {
-			tipoReproduccion = YouTubePlayerPortlet.TIPO_REPRODUCCION_DINAMICA;
-		}
+		String showTitle = prefs.getValue("showTitle", "false");
+		String showDescription = prefs.getValue("showDescription", "false");
+		String showViewCount = prefs.getValue("showViewCount", "false");
 		
 		response.setContentType("text/html");
 		PortletRequestDispatcher dispatcher = getPortletContext().getRequestDispatcher("/WEB-INF/jsp/YouTubePlayerPortlet_edit.jsp");
 		
 		request.setAttribute("tipoReproduccion", tipoReproduccion);
 		request.setAttribute("videoId", videoId);
+		request.setAttribute("showTitle", showTitle);
+		request.setAttribute("showDescription", showDescription);
+		request.setAttribute("showViewCount", showViewCount);
 		PortletURL saveActionUrl = response.createActionURL();
 		saveActionUrl.setParameter(ActionRequest.ACTION_NAME, "saveAction");
 		request.setAttribute("saveActionURL", saveActionUrl);
@@ -78,7 +81,9 @@ public class YouTubePlayerPortlet extends GenericPortlet {
 		PortletPreferences prefs = request.getPreferences();
 		String tipoReproduccion = prefs.getValue("tipoReproduccion", "");
 		String videoId = prefs.getValue("videoId", YouTubePlayerPortlet.TIPO_REPRODUCCION_DINAMICA);
+		String showTitle = prefs.getValue("showTitle", "false");
 		String showDescription = prefs.getValue("showDescription", "false");
+		String showViewCount = prefs.getValue("showViewCount", "false");
 		
 		if(tipoReproduccion.equals(YouTubePlayerPortlet.TIPO_REPRODUCCION_DINAMICA)) {
 			videoId = request.getParameter("video");
@@ -103,7 +108,9 @@ public class YouTubePlayerPortlet extends GenericPortlet {
 			}
 
 			request.setAttribute("feed", feed);
+			request.setAttribute("showTitle", showTitle);
 			request.setAttribute("showDescription", showDescription);
+			request.setAttribute("showViewCount", showViewCount);
 			//request.setAttribute("video", idVideo);
 			
 			
@@ -118,12 +125,18 @@ public class YouTubePlayerPortlet extends GenericPortlet {
 	@ProcessAction(name="saveAction") 
 	public void saveAction(ActionRequest actionRequest, ActionResponse actionResponse) {
 		String tipoReproduccion = actionRequest.getParameter("tipo_reproduccion");
+		String showTitle = actionRequest.getParameter("show_title");
 		String showDescription = actionRequest.getParameter("show_description");
+		String showViewCount = actionRequest.getParameter("show_view_count");
+		showTitle = showTitle != null? "true": "false";
 		showDescription = showDescription != null? "true": "false";
+		showViewCount = showViewCount != null? "true": "false";
 		PortletPreferences prefs = actionRequest.getPreferences();
 		try {
 			prefs.setValue("tipoReproduccion", tipoReproduccion);
+			prefs.setValue("showTitle", showTitle);
 			prefs.setValue("showDescription", showDescription);
+			prefs.setValue("showViewCount", showViewCount);
 			if(tipoReproduccion.equals(YouTubePlayerPortlet.TIPO_REPRODUCCION_ESTATICA)) {
 				String videoId = actionRequest.getParameter("video_id");
 				if(videoId != null && !videoId.trim().isEmpty()) {

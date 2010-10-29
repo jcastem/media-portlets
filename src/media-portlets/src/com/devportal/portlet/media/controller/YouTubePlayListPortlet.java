@@ -68,33 +68,38 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 		// Cargamos el codigo del playlist de las preferencias del portlet
 		PortletPreferences prefs = request.getPreferences();
 		String playlist = prefs.getValue("playlist", null);
+		
+		YouTubeService service = YouTubeUtil.getYouTubeServiceInstance();
+		int maxResults = 10; 
+		int start = 1; // Indice de comienzo del feed por defecto
+		Integer paginaActual = 1; // Indice de pagina por defecto
+		int totalResults = 0;
+		PlaylistLinkFeed videoFeed;
+		int totalPaginas = 0;
 		if(playlist != null && !playlist.trim().isEmpty()) {
-			YouTubeService service = YouTubeUtil.getYouTubeServiceInstance();
-			int maxResults = 10; 
-			int start = 1; // Indice de comienzo del feed por defecto
-			Integer paginaActual = 1; // Indice de pagina por defecto
-			int totalResults = 0;
+			
 			// Invocamos un primer feed para obtener el tamano de la lista de videos
 			String feedUrl = "http://gdata.youtube.com/feeds/api/playlists/" + playlist + "?orderby=published&start-index=" + start + "&max-results=" + maxResults;
-			PlaylistLinkFeed videoFeed;
+			
 			try {
 				videoFeed = service.getFeed(new URL(feedUrl), PlaylistLinkFeed.class);
 				totalResults = videoFeed.getTotalResults();
+				// Calculo del total de paginas
+				if(totalResults % maxResults == 0) {
+					// Si el modulo es igual a 0 es porque la pagina tiene una cantidad de registro a penas para la pagina
+					totalPaginas = totalResults / maxResults;
+				}
+				else {
+					totalPaginas = (totalResults / maxResults) + 1;
+				}
+
 			} catch (ServiceException se) {
 				// TODO Auto-generated catch block
 				se.printStackTrace();
 			}
-			int totalPaginas = 0;
-			if(totalResults % maxResults == 0) {
-				// Si el modulo es igual a 0 es porque la pagina tiene una cantidad de registro a penas para la pagina
-				totalPaginas = totalResults / maxResults;
-			}
-			else {
-				totalPaginas = (totalResults / maxResults) + 1;
-			}
 			
 			
-			// Inicio logica paginador
+			// Asignacion de la pagina actual de corrimiento (start -> offset) para el servicio web
 			if(request.getParameter("page") != null && !request.getParameter("page").trim().isEmpty()) {
 				try {
 					Integer page = Integer.parseInt(request.getParameter("page"));
@@ -109,8 +114,7 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 				}
 			}
 			start = ((paginaActual -1) * maxResults) + 1;
-			// Fin logica paginador Siguiente
-			//System.out.println("offset = " + offset);
+			// Fin asignacion pagina actual
 		
 			
 			/* Este codigo permite ver todas las listas de un usuario y enviarle peticiones a cada lista	
@@ -179,12 +183,14 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 			renderURL.setParameter("video", "6K-HlwfhXeI");
 			request.setAttribute("videoURL", renderURL);
 			*/		
-			response.setContentType("text/html");
-			PortletRequestDispatcher dispatcher = getPortletContext()
-			.getRequestDispatcher(
-					"/WEB-INF/jsp/YouTubePlayListPortlet_view.jsp");
-			dispatcher.include(request, response);
+			
 		}
+		
+		response.setContentType("text/html");
+		PortletRequestDispatcher dispatcher = getPortletContext()
+		.getRequestDispatcher(
+				"/WEB-INF/jsp/YouTubePlayListPortlet_view.jsp");
+		dispatcher.include(request, response);
 		
 	}
 	

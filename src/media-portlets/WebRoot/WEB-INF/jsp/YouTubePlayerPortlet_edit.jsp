@@ -11,10 +11,11 @@
 <form action="${requestScope.saveActionURL}" method="POST">
 	Tipo de reproducci&oacute;n:
 	<select name="tipo_reproduccion">
-		<option value="dinamica" {requestScope.tipoReproduccion.equals("dinamica")?"selected='selected'": "" }>Din&aacute;mica</option>
-		<option value="estatica">Est&aacute;tica</option>
+		<option value="dinamica" ${requestScope.tipoReproduccion == "dinamica"? 'selected': '' }>Din&aacute;mica</option>
+		<option value="estatica" ${requestScope.tipoReproduccion == "estatica"? 'selected': '' }>Est&aacute;tica</option>
 	</select>
 	ID del video de youtube:
-	<input type="text" name="video_id" />
+	<input type="text" name="video_id" value="${requestScope.videoId}"/>
+	Mostrar descripci&oacute;n: <input type="checkbox" name="show_description"> 
 	<input type="submit" />
 </form>

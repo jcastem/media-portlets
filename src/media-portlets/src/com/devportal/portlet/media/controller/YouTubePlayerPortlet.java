@@ -57,6 +57,7 @@ public class YouTubePlayerPortlet extends GenericPortlet {
 		PortletRequestDispatcher dispatcher = getPortletContext().getRequestDispatcher("/WEB-INF/jsp/YouTubePlayerPortlet_edit.jsp");
 		
 		request.setAttribute("tipoReproduccion", tipoReproduccion);
+		request.setAttribute("videoId", videoId);
 		PortletURL saveActionUrl = response.createActionURL();
 		saveActionUrl.setParameter(ActionRequest.ACTION_NAME, "saveAction");
 		request.setAttribute("saveActionURL", saveActionUrl);
@@ -76,10 +77,9 @@ public class YouTubePlayerPortlet extends GenericPortlet {
 		// Cargamos la configuracion del portlet
 		PortletPreferences prefs = request.getPreferences();
 		String tipoReproduccion = prefs.getValue("tipoReproduccion", "");
-		String videoId = prefs.getValue("videoId", "");
-		if(tipoReproduccion.equals("")) {
-			tipoReproduccion = YouTubePlayerPortlet.TIPO_REPRODUCCION_DINAMICA;
-		}
+		String videoId = prefs.getValue("videoId", YouTubePlayerPortlet.TIPO_REPRODUCCION_DINAMICA);
+		String showDescription = prefs.getValue("showDescription", "false");
+		
 		if(tipoReproduccion.equals(YouTubePlayerPortlet.TIPO_REPRODUCCION_DINAMICA)) {
 			videoId = request.getParameter("video");
 		}		
@@ -103,6 +103,7 @@ public class YouTubePlayerPortlet extends GenericPortlet {
 			}
 
 			request.setAttribute("feed", feed);
+			request.setAttribute("showDescription", showDescription);
 			//request.setAttribute("video", idVideo);
 			
 			
@@ -117,9 +118,12 @@ public class YouTubePlayerPortlet extends GenericPortlet {
 	@ProcessAction(name="saveAction") 
 	public void saveAction(ActionRequest actionRequest, ActionResponse actionResponse) {
 		String tipoReproduccion = actionRequest.getParameter("tipo_reproduccion");
+		String showDescription = actionRequest.getParameter("show_description");
+		showDescription = showDescription != null? "true": "false";
 		PortletPreferences prefs = actionRequest.getPreferences();
 		try {
 			prefs.setValue("tipoReproduccion", tipoReproduccion);
+			prefs.setValue("showDescription", showDescription);
 			if(tipoReproduccion.equals(YouTubePlayerPortlet.TIPO_REPRODUCCION_ESTATICA)) {
 				String videoId = actionRequest.getParameter("video_id");
 				if(videoId != null && !videoId.trim().isEmpty()) {

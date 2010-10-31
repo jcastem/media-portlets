@@ -250,10 +250,10 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 				if(playlist != null & !playlist.trim().isEmpty()) {
 					prefs.setValue("playlist", playlist.trim());
 				}
-				if(user != null & !user.trim().isEmpty()) {
+				if(user != null) {
 					prefs.setValue("user", user.trim());
 				}
-				if(tags != null & !tags.trim().isEmpty()) {
+				if(tags != null) {
 					prefs.setValue("tags", tags.trim());
 				}
 				prefs.store();

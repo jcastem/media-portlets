@@ -35,6 +35,10 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 	private static final String PLAYLIST_TYPE_PLAYLIST = "playlist";
 	private static final String PLAYLIST_TYPE_SEARCH = "search"; 
 	private static final Integer MIN_ITEMS_PER_PAGE = 10;
+	private static final String TEMPLATE_FULL = "full";
+	private static final String TEMPLATE_1COLUMN = "1column";
+	private static final String TEMPLATE_2COLUMN = "2column";
+	
 	
 	/**
 	 * Helper method to serve up the mandatory view mode.
@@ -56,11 +60,13 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 		// Cargamos la configuracion del playlist del portlet
 		PortletPreferences prefs = request.getPreferences();
 		String maxResults = prefs.getValue("maxResults", YouTubePlayListPortlet.MIN_ITEMS_PER_PAGE.toString());
+		String template = prefs.getValue("template", YouTubePlayListPortlet.TEMPLATE_FULL);
 		String playlistType = prefs.getValue("playlistType", null);
 		String playlist = prefs.getValue("playlist", "");
 		String user = prefs.getValue("user", "");
 		String tags = prefs.getValue("tags", "");
 		request.setAttribute("maxResults", maxResults);
+		request.setAttribute("template", template);
 		request.setAttribute("playlistType", playlistType);
 		request.setAttribute("playlist", playlist);
 		request.setAttribute("user", user);
@@ -84,6 +90,7 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 		// Cargamos el codigo del playlist de las preferencias del portlet
 		PortletPreferences prefs = request.getPreferences();
 		String strMaxResults = prefs.getValue("maxResults", YouTubePlayListPortlet.MIN_ITEMS_PER_PAGE.toString());
+		String template = prefs.getValue("template", YouTubePlayListPortlet.TEMPLATE_FULL);
 		String playlist = prefs.getValue("playlist", null);
 		String playlistType = prefs.getValue("playlistType", null);
 		String user = prefs.getValue("user", null);
@@ -207,6 +214,13 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 				for(PlaylistLinkEntry entry : videoFeed.getEntries() ) {
 					Map<String, String> feed = new HashMap<String,String>();
 					feed.put("title", entry.getTitle().getPlainText());
+					System.out.println("DEsC: " + entry.getDescription());
+					if(entry.getSummary() != null) {
+						feed.put("description", entry.getSummary().getPlainText());
+					}
+					else {
+						feed.put("description", "");
+					}
 					// Almacenamos la URL del video convertida a parametro de portlet
 					URL url = new URL(entry.getHtmlLink().getHref());
 					Map<String, String> res = YouTubeUtil.getQueryMap(url.getQuery());
@@ -239,9 +253,20 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 				e.printStackTrace();
 			}		
 			response.setContentType("text/html");
-			PortletRequestDispatcher dispatcher = getPortletContext()
-			.getRequestDispatcher(
-					"/WEB-INF/jsp/YouTubePlayListPortlet_view.jsp");
+			//PortletRequestDispatcher dispatcher = getPortletContext().getRequestDispatcher("/WEB-INF/jsp/YouTubePlayListPortlet_view.jsp");
+			// Asignacion de plantilla
+			String templateJsp = "/WEB-INF/jsp/YouTubePlayListPortlet_full_view.jsp";
+			if(template.equals(YouTubePlayListPortlet.TEMPLATE_FULL)) {
+				templateJsp = "/WEB-INF/jsp/YouTubePlayListPortlet_full_view.jsp";
+			}
+			else if(template.equals(YouTubePlayListPortlet.TEMPLATE_1COLUMN)) {
+				templateJsp = "/WEB-INF/jsp/YouTubePlayListPortlet_1_column_view.jsp";
+			}
+			else if(template.equals(YouTubePlayListPortlet.TEMPLATE_2COLUMN)) {
+				templateJsp = "/WEB-INF/jsp/YouTubePlayListPortlet_2_column_view.jsp";
+			}
+			
+			PortletRequestDispatcher dispatcher = getPortletContext().getRequestDispatcher(templateJsp);
 			dispatcher.include(request, response);
 		}
 		
@@ -250,6 +275,7 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 	@ProcessAction(name="savePlaylist") 
 	public void editAction(ActionRequest actionRequest, ActionResponse actionResponse) {
 		String maxResults = actionRequest.getParameter("max_results");
+		String template = actionRequest.getParameter("template");
 		String playlistType = actionRequest.getParameter("playlist_type");
 		String playlist = actionRequest.getParameter("playlist");
 		String user = actionRequest.getParameter("user");
@@ -266,6 +292,7 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 						
 					}
 				}
+				prefs.setValue("template", template);
 				prefs.setValue("playlistType", playlistType);
 				if(playlist != null & !playlist.trim().isEmpty()) {
 					prefs.setValue("playlist", playlist.trim());

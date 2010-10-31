@@ -34,6 +34,7 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 
 	private static final String PLAYLIST_TYPE_PLAYLIST = "playlist";
 	private static final String PLAYLIST_TYPE_SEARCH = "search"; 
+	private static final Integer MIN_ITEMS_PER_PAGE = 10;
 	
 	/**
 	 * Helper method to serve up the mandatory view mode.
@@ -54,10 +55,12 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 			throws PortletException, IOException {
 		// Cargamos la configuracion del playlist del portlet
 		PortletPreferences prefs = request.getPreferences();
+		String maxResults = prefs.getValue("maxResults", YouTubePlayListPortlet.MIN_ITEMS_PER_PAGE.toString());
 		String playlistType = prefs.getValue("playlistType", null);
 		String playlist = prefs.getValue("playlist", "");
 		String user = prefs.getValue("user", "");
 		String tags = prefs.getValue("tags", "");
+		request.setAttribute("maxResults", maxResults);
 		request.setAttribute("playlistType", playlistType);
 		request.setAttribute("playlist", playlist);
 		request.setAttribute("user", user);
@@ -80,13 +83,20 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 			throws PortletException, IOException {
 		// Cargamos el codigo del playlist de las preferencias del portlet
 		PortletPreferences prefs = request.getPreferences();
+		String strMaxResults = prefs.getValue("maxResults", YouTubePlayListPortlet.MIN_ITEMS_PER_PAGE.toString());
 		String playlist = prefs.getValue("playlist", null);
 		String playlistType = prefs.getValue("playlistType", null);
 		String user = prefs.getValue("user", null);
 		String tags = prefs.getValue("tags", null);
 		
 		YouTubeService service = YouTubeUtil.getYouTubeServiceInstance();
-		int maxResults = 10; 
+		int maxResults = YouTubePlayListPortlet.MIN_ITEMS_PER_PAGE;
+		try {
+			maxResults = Integer.parseInt(strMaxResults);
+		}
+		catch(NumberFormatException ne) {
+			
+		}
 		int start = 1; // Indice de comienzo del feed por defecto
 		Integer paginaActual = 1; // Indice de pagina por defecto
 		int totalResults = 0;
@@ -239,6 +249,7 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 	
 	@ProcessAction(name="savePlaylist") 
 	public void editAction(ActionRequest actionRequest, ActionResponse actionResponse) {
+		String maxResults = actionRequest.getParameter("max_results");
 		String playlistType = actionRequest.getParameter("playlist_type");
 		String playlist = actionRequest.getParameter("playlist");
 		String user = actionRequest.getParameter("user");
@@ -246,6 +257,15 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 		PortletPreferences prefs = actionRequest.getPreferences();
 		if(playlistType != null & !playlistType.trim().isEmpty()) {
 			try {
+				if(maxResults != null && !maxResults.trim().isEmpty()) {
+					try {
+						Integer.valueOf(maxResults.trim());
+						prefs.setValue("maxResults", maxResults);
+					}
+					catch(NumberFormatException ne) {
+						
+					}
+				}
 				prefs.setValue("playlistType", playlistType);
 				if(playlist != null & !playlist.trim().isEmpty()) {
 					prefs.setValue("playlist", playlist.trim());

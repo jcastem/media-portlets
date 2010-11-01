@@ -224,6 +224,9 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 					Map<String, String> res = YouTubeUtil.getQueryMap(url.getQuery());
 					PortletURL renderURL = response.createRenderURL();
 					renderURL.setParameter("video", res.get("v"));
+					if(request.getParameter("page") != null && !request.getParameter("page").trim().isEmpty()) {
+						renderURL.setParameter("page", request.getParameter("page"));
+					}
 					feed.put("url", renderURL.toString());
 					feed.put("v", res.get("v"));
 					feeds.add(feed);

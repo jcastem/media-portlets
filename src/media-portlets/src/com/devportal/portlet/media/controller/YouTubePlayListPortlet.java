@@ -27,6 +27,8 @@ import com.google.gdata.client.youtube.YouTubeService;
 import com.google.gdata.data.Category;
 import com.google.gdata.data.youtube.PlaylistLinkEntry;
 import com.google.gdata.data.youtube.PlaylistLinkFeed;
+import com.google.gdata.data.youtube.VideoEntry;
+import com.google.gdata.data.youtube.VideoFeed;
 import com.google.gdata.data.youtube.YouTubeNamespace;
 import com.google.gdata.util.ServiceException;
 
@@ -200,27 +202,23 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 			feedUrl = wsUrl + "/" + playlist + "?orderby=published&start-index=" + start + "&max-results=" + maxResults;
 			System.out.println("FEED LIST: " + feedUrl);
 			List<Map<String,String>> feeds = new ArrayList<Map<String,String>>();
+			VideoFeed videoFeedList = null; 
 			try {
 				//VideoFeed videoFeed = service.getFeed(new URL(feedUrl), VideoFeed.class);
 				if(playlistType.equals(YouTubePlayListPortlet.PLAYLIST_TYPE_PLAYLIST)) {
-					videoFeed = service.getFeed(new URL(feedUrl), PlaylistLinkFeed.class);
+					videoFeedList = service.getFeed(new URL(feedUrl), VideoFeed.class);
 				}
 				else if(playlistType.equals(YouTubePlayListPortlet.PLAYLIST_TYPE_SEARCH)) {
 					query.setMaxResults(maxResults);
 					query.setStartIndex(start);
-					videoFeed = service.query(query, PlaylistLinkFeed.class);
+					videoFeedList = service.query(query, VideoFeed.class);
 					System.out.println("RES: " + totalResults);
 				}
-				for(PlaylistLinkEntry entry : videoFeed.getEntries() ) {
+				for(VideoEntry entry : videoFeedList.getEntries() ) {
 					Map<String, String> feed = new HashMap<String,String>();
 					feed.put("title", entry.getTitle().getPlainText());
-					System.out.println("DEsC: " + entry.getDescription());
-					if(entry.getSummary() != null) {
-						feed.put("description", entry.getSummary().getPlainText());
-					}
-					else {
-						feed.put("description", "");
-					}
+					//System.out.println("DEsC: " + entry.get);
+					feed.put("description", entry.getMediaGroup().getDescription().getPlainTextContent());
 					// Almacenamos la URL del video convertida a parametro de portlet
 					URL url = new URL(entry.getHtmlLink().getHref());
 					Map<String, String> res = YouTubeUtil.getQueryMap(url.getQuery());
@@ -231,7 +229,7 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 					feeds.add(feed);
 				}
 				
-				System.out.println("SIZE: " + videoFeed.getTotalResults());
+				System.out.println("SIZE: " + videoFeedList.getTotalResults());
 				// Asignamos a al vista los videos tomados del feed
 				request.setAttribute("videos", feeds);
 				

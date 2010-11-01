@@ -15,6 +15,14 @@
 	<input id="max_results" type="text" name="max_results" value="${requestScope.maxResults}" maxlength="3">
 	</p>
 	<p>
+	<label for="template">Plantilla:</label>
+	<select id="template" name="template" onchange="mostrarVideoId(this.value, 'div_video_id')"> 
+		<option value="full" ${requestScope.template == "full"? 'selected="selected"': '' }>Full</option>
+		<option value="1column" ${requestScope.template == "1column"? 'selected="selected"': '' }>Una columna</option>
+		<option value="2column" ${requestScope.template == "2column"? 'selected="selected"': '' }>Dos columnas</option>
+	</select>
+	</p>
+	<p>
 	<label for="playlist_type">Tipo de lista de reproducci&oacute;n:
 	</label>
 	<select id="playlist_type" name="playlist_type" onchange="mostrarVideoId(this.value, 'div_video_id')"> 

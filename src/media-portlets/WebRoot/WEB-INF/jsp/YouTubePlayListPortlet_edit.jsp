@@ -23,6 +23,14 @@
 	</select>
 	</p>
 	<p>
+	<label for="template">Tipo de reproductor:</label>
+	<select id="player_type" name="player_type"> 
+		<option value="youtube" ${requestScope.playerType == "youtube"? 'selected="selected"': '' }>YouTube</option>
+		<option value="embedded" ${requestScope.playerType == "embedded"? 'selected="selected"': '' }>Embebido</option>
+		<option value="in_page" ${requestScope.playerType == "in_page"? 'selected="selected"': '' }>Misma p&aacute;gina</option>
+	</select>
+	</p>
+	<p>
 	<label for="playlist_type">Tipo de lista de reproducci&oacute;n:
 	</label>
 	<select id="playlist_type" name="playlist_type" onchange="mostrarVideoId(this.value, 'div_video_id')"> 

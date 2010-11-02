@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/gdata-client-1.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jstl-api-1.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jstl-impl-1.2.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/mailapi.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>

@@ -40,6 +40,11 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 	private static final String TEMPLATE_FULL = "full";
 	private static final String TEMPLATE_1COLUMN = "1column";
 	private static final String TEMPLATE_2COLUMN = "2column";
+	private static final String PLAYER_TYPE_OTHER_PAGE = "other_page";
+	private static final String PLAYER_TYPE_IN_PAGE = "in_page";
+	private static final String PLAYER_TYPE_EMBEDDED = "embedded";
+	private static final String PLAYER_TYPE_YOUTUBE = "youtube";
+	
 	
 	
 	/**
@@ -67,12 +72,14 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 		String playlist = prefs.getValue("playlist", "");
 		String user = prefs.getValue("user", "");
 		String tags = prefs.getValue("tags", "");
+		String playerType = prefs.getValue("playerType", YouTubePlayListPortlet.PLAYER_TYPE_YOUTUBE);
 		request.setAttribute("maxResults", maxResults);
 		request.setAttribute("template", template);
 		request.setAttribute("playlistType", playlistType);
 		request.setAttribute("playlist", playlist);
 		request.setAttribute("user", user);
 		request.setAttribute("tags", tags);
+		request.setAttribute("playerType", playerType);
 		
 		response.setContentType("text/html");
 		PortletRequestDispatcher dispatcher = getPortletContext().getRequestDispatcher("/WEB-INF/jsp/YouTubePlayListPortlet_edit.jsp");
@@ -97,6 +104,7 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 		String playlistType = prefs.getValue("playlistType", null);
 		String user = prefs.getValue("user", null);
 		String tags = prefs.getValue("tags", null);
+		String playerType = prefs.getValue("playerType", YouTubePlayListPortlet.PLAYER_TYPE_YOUTUBE);
 		
 		YouTubeService service = YouTubeUtil.getYouTubeServiceInstance();
 		int maxResults = YouTubePlayListPortlet.MIN_ITEMS_PER_PAGE;
@@ -219,20 +227,29 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 					feed.put("title", entry.getTitle().getPlainText());
 					//System.out.println("DEsC: " + entry.get);
 					feed.put("description", entry.getMediaGroup().getDescription().getPlainTextContent());
-					// Almacenamos la URL del video convertida a parametro de portlet
+					// URL del video convertida a parametro de portlet
+					
 					URL url = new URL(entry.getHtmlLink().getHref());
 					Map<String, String> res = YouTubeUtil.getQueryMap(url.getQuery());
-					PortletURL renderURL = response.createRenderURL();
-					renderURL.setParameter("video", res.get("v"));
-					if(request.getParameter("page") != null && !request.getParameter("page").trim().isEmpty()) {
-						renderURL.setParameter("page", request.getParameter("page"));
+					if(!playerType.equals(YouTubePlayListPortlet.PLAYER_TYPE_YOUTUBE)) {
+						PortletURL renderURL = response.createRenderURL();
+						renderURL.setParameter("video", res.get("v"));
+						if(request.getParameter("page") != null && !request.getParameter("page").trim().isEmpty()) {
+							renderURL.setParameter("page", request.getParameter("page"));
+						}
+						feed.put("url", renderURL.toString());
 					}
-					feed.put("url", renderURL.toString());
+					else {
+						feed.put("url", entry.getHtmlLink().getHref());
+					}
 					feed.put("v", res.get("v"));
+					
+					feed.put("urlYouTube", entry.getHtmlLink().getHref());
 					feeds.add(feed);
 				}
 				
 				System.out.println("SIZE: " + videoFeedList.getTotalResults());
+				request.setAttribute("playerType", playerType);
 				// Asignamos a al vista los videos tomados del feed
 				request.setAttribute("videos", feeds);
 				
@@ -281,6 +298,7 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 		String playlist = actionRequest.getParameter("playlist");
 		String user = actionRequest.getParameter("user");
 		String tags = actionRequest.getParameter("tags");
+		String playerType = actionRequest.getParameter("player_type");
 		PortletPreferences prefs = actionRequest.getPreferences();
 		if(playlistType != null & !playlistType.trim().isEmpty()) {
 			try {
@@ -304,6 +322,7 @@ public class YouTubePlayListPortlet extends GenericPortlet {
 				if(tags != null) {
 					prefs.setValue("tags", tags.trim());
 				}
+				prefs.setValue("playerType", playerType);
 				prefs.store();
 			} catch (ReadOnlyException e) {
 				// TODO Auto-generated catch block
